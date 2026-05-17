@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cita Agendada - Gest LandCover</title>
+    <style>
+        body { background-color: #333; margin: 0; padding: 20px; font-family: 'Arial Narrow', sans-serif; }
+
+        .main-window {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #b7c9d9;
+            border-radius: 15px;
+            overflow: visible; 
+            border: 2px solid #000;
+        }
+
+        .white-header-strip {
+            background-color: white;
+            padding: 0 30px;
+            border-bottom: 2px solid #ccc;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            height: 60px;
+        }
+
+     
+        .logo-img-header-circular {
+            width: 160px; 
+            height: 160px; 
+            border-radius: 50%;
+            border: 5px solid #1b365d;
+            object-fit: cover;
+            background: white;
+            z-index: 100;
+            position: relative; 
+            top: 50px; 
+            margin-right: 20px;
+        }
+
+        .confirmation-layout {
+            padding: 30px 40px 20px 100px;
+            text-align: left;
+        }
+
+        .title-bold { 
+            font-size: 3rem; 
+            color: #000;
+            margin: -65px 0 5px 140px; 
+            z-index: 110;
+            position: relative;
+        }
+
+        
+        .subtitle { 
+            font-size: 1.2rem; 
+            margin-bottom: 25px; 
+            margin-top: 0;
+            margin-left: 255px;
+            position: relative;
+            z-index: 110;
+        }
+
+        /* Ajuste ligero al botón para que no quede encimado y siga el flujo */
+        .btn-receipt {
+            background: #b7c9d9;
+            border: 1px solid #1b365d;
+            padding: 10px 40px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 5px;
+            margin-left: 300px;
+            display: inline-block;
+            position: relative;
+            z-index: 110;
+        }
+
+        .dashed-line { border-top: 2px dashed #1b365d; margin: 25px 0; }
+
+        .confirm-grid { display: flex; gap: 30px; text-align: left; }
+
+        .confirm-card {
+            background: white;
+            padding: 25px;
+            border-radius: 40px;
+            flex: 1;
+        }
+
+        .card-header-flex {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid #b7c9d9;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .confirm-icon { 
+            width: 60px; 
+            height: 60px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .small-cal-icon { 
+            width: 20px; 
+            height: 20px; 
+            margin-right: 8px; 
+            vertical-align: middle; 
+        }
+        
+        .label-bold { font-weight: bold; color: #000; }
+
+        .thanks-box {
+            background: #8faec5;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 1px solid #1b365d;
+            color: #000;
+            text-align: center;
+        }
+
+        .warning-icon { 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            width: 30px; height: 30px; 
+            border-radius: 50%; 
+            background: #000; color: #fff; 
+            font-weight: bold; 
+            margin-right: 10px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="main-window">
+        <header class="white-header-strip">
+            <div class="logo-area">
+                <img src="imagenproye.png" alt="Logo" class="logo-img-header-circular">
+            </div>
+        </header>
+
+        <main class="content confirmation-layout">
+            <h2 class="title-bold">Cita Agendada Con Éxito!</h2>
+            <p class="subtitle">Tu Cita Ha Sido Registrada Correctamente.</p>
+            
+            <button class="btn-receipt">Comprobante De Cita</button>
+            
+            <div class="dashed-line"></div>
+
+            <div class="confirm-grid">
+                <div class="confirm-card">
+                    <div class="card-header-flex">
+                        <div class="confirm-icon">
+                            <svg viewBox="0 0 24 24" width="50" height="50" fill="black"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        </div>
+                        <h3 style="margin: 0;">Datos Del Cliente</h3>
+                    </div>
+                    <p><span class="label-bold">Nombre:</span> <strong id="show-nombre">Cargando...</strong></p>
+                    <p><span class="label-bold">Teléfono:</span> <strong id="show-tel">Cargando...</strong></p>
+                    <p><span class="label-bold">Correo Electrónico:</span> <strong id="show-email">Cargando...</strong></p>
+                    <p><span class="label-bold">Dirección:</span> <strong id="show-dir">Cargando...</strong></p>
+                </div>
+
+                <div class="confirm-card">
+                    <div class="card-header-flex">
+                        <div class="confirm-icon">
+                            <svg viewBox="0 0 24 24" width="50" height="50" fill="black"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+                        </div>
+                        <h3 style="margin: 0;">Detalle De La Cita</h3>
+                    </div>
+                    <p><span class="label-bold">Servicio:</span> <strong id="show-servicio">Cargando servicio...</strong></p>
+                    <p>
+                        <span class="label-bold">Fecha:</span> 
+                        <img src="https://img.icons8.com/material-outlined/24/000000/calendar.png" class="small-cal-icon">
+                        <strong id="show-fecha">Cargando...</strong>
+                    </p>
+                    <p><span class="label-bold">Horario:</span> <strong id="show-hora">Cargando...</strong></p>
+                    <p><span class="label-bold">Lugar/Modalidad:</span> Presencial</p>
+                </div>
+            </div>
+
+            <div class="thanks-box">
+                <h2 style="font-size: 2.2rem; margin-bottom: 5px;">Gracias Por Confiar En GeoLandcover</h2>
+                <p style="font-size: 1.1rem;">Estamos Listos Para Ayudarte Con Soluciones Topográficas Y SIG De Calidad.</p>
+                <p style="margin-top: 15px; font-weight: bold;">
+                    <span class="warning-icon">!</span> Te Hemos Enviado Los Detalles De Tu Cita A Tu Correo Electronico.
+                </p>
+            </div>
+        </main>
+        
+        <div style="padding: 15px; text-align: center;">
+            <button onclick="window.location.href='servicios.html'" style="background: none; border: none; text-decoration: underline; cursor: pointer; color: #1b365d; font-weight: bold;">Volver al inicio</button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Jalar datos del localStorage
+            const nombre = localStorage.getItem('reg-nombre') || "No registrado";
+            const telefono = localStorage.getItem('reg-tel') || "No registrado";
+            const email = localStorage.getItem('reg-email') || "No registrado";
+            const direccion = localStorage.getItem('cita_direccion') || "No especificada";
+            const fecha = localStorage.getItem('cita_fecha') || "Pendiente";
+            const hora = localStorage.getItem('cita_hora') || "Pendiente";
+            
+            const servicio = localStorage.getItem('servicioActual') || 
+                             localStorage.getItem('servicio_actual') || 
+                             localStorage.getItem('servicio') || 
+                             "Servicios Con SIG";
+
+            // Insertar en los elementos correspondientes de forma dinámica
+            document.getElementById('show-nombre').innerText = nombre;
+            document.getElementById('show-tel').innerText = telefono;
+            document.getElementById('show-email').innerText = email;
+            document.getElementById('show-dir').innerText = direccion;
+            document.getElementById('show-fecha').innerText = fecha;
+            document.getElementById('show-hora').innerText = hora;
+            document.getElementById('show-servicio').innerText = servicio;
+
+            //  la cita confirmada permanentemente en el historial (Simula inserción en Tabla SQL/BD)
+            if(fecha !== "Pendiente" && hora !== "Pendiente") {
+                let baseDeDatosCitas = JSON.parse(localStorage.getItem('bd_citas_globales')) || [];
+                
+                // Comprobamos que no se duplique en el arreglo antes de insertarlo
+                const yaRegistrada = baseDeDatosCitas.some(c => c.fecha === fecha && c.hora === hora);
+                if (!yaRegistrada) {
+                    baseDeDatosCitas.push({ fecha: fecha, hora: hora });
+                    localStorage.setItem('bd_citas_globales', JSON.stringify(baseDeDatosCitas));
+                }
+            }
+        };
+    </script>
+</body>
+</html>

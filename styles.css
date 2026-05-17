@@ -1,0 +1,99 @@
+/* MARCO OSCURO Y CONFIGURACIÓN BASE (SIN CAMBIOS) */
+* { box-sizing: border-box; }
+body.frame-body {
+    background-color: #1a1a1a; 
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    font-family: 'Arial Narrow', sans-serif;
+}
+
+.main-window {
+    background-color: #b7c9d9; 
+    width: 100%;
+    max-width: 1100px;
+    min-height: 95vh;
+    border: 2px solid #000;
+    display: flex;
+    flex-direction: column;
+}
+
+.white-header {
+    background: white;
+    padding: 10px 20px; 
+    border-bottom: 2px solid #ccc;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+
+.logo-area { display: flex; align-items: center; gap: 20px; }
+.logo-img-header { width: 110px; height: 110px; object-fit: cover; border-radius: 50%; border: 3px solid #1b365d; }
+.logo-area h1 { color: #1b365d; font-family: 'Georgia', serif; font-style: italic; font-size: 2.2rem; margin: 0; }
+
+/* TEXTOS PRINCIPALES (SIN CAMBIOS) */
+.title-bold { font-size: 3.5rem; font-weight: 900; text-align: center; margin: 20px 0 5px 0; color: #000; }
+.subtitle { text-align: center; font-size: 1.3rem; margin: 0 auto 25px auto; max-width: 800px; display: block; line-height: 1.4; color: #333; }
+
+/* TARJETA BLANCA (LOGIN/REGISTRO/AGENDA) (SIN CAMBIOS) */
+.white-card { background: white; margin: 0 50px; padding: 35px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.login-layout { display: flex; gap: 40px; }
+
+/* FORMULARIOS (SIN CAMBIOS) */
+label { display: block; font-weight: bold; color: #1b365d; margin-bottom: 10px; font-size: 1.4rem; }
+input { width: 100%; padding: 15px; background: #e9ecef; border: 1px solid #ccc; border-radius: 10px; margin-bottom: 5px; font-size: 1.2rem; }
+.error-msg { color: #d93025; font-size: 1rem; margin-bottom: 15px; display: none; font-weight: bold; }
+.btn-navy { background: #1b365d; color: white; border: none; padding: 18px; border-radius: 10px; font-weight: bold; font-size: 1.4rem; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; }
+
+/* ENLACES DE ABAJO (SIN CAMBIOS) */
+.bottom-nav { text-align: center; padding: 25px; margin-top: auto; }
+.link-btn { background: none; border: none; text-decoration: underline; cursor: pointer; font-size: 1.2rem; color: black; font-weight: bold; }
+
+/* GRID DE REGISTRO (SIN CAMBIOS) */
+.register-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.full-row { grid-column: span 2; }
+
+/* SERVICIOS (SIN CAMBIOS) */
+.services-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; padding: 0 60px 40px 60px; }
+.service-card { background: white; border-radius: 25px; padding: 30px; text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+.service-card h3 { color: #000; font-size: 1.8rem; margin-bottom: 15px; font-weight: bold; }
+.service-card ul { text-align: left; display: inline-block; font-size: 1.1rem; color: #333; margin-bottom: 20px; }
+.btn-container { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.btn-service { background: #1b365d; color: white; border: none; padding: 12px 0; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; width: 180px; }
+
+/* AGENDAR CITA (SIN CAMBIOS) */
+.agenda-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 20px 50px; }
+.agenda-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.calendar-header { background: #b7c9d9; display: flex; justify-content: space-between; padding: 15px; font-weight: bold; font-size: 1.2rem; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; border: 1px solid #eee; }
+.day-num { padding: 15px; cursor: pointer; font-size: 1.1rem; }
+.day-num.selected { background: #007bff; color: white; border-radius: 50%; }
+.day-num.past { color: #ccc; cursor: not-allowed; pointer-events: none; }
+.day-num.available { color: #007bff; font-weight: bold; }
+.time-slot { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; cursor: pointer; }
+.radio-circle { width: 22px; height: 22px; border: 2px solid #1b365d; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.radio-circle.active::after { content: ""; width: 12px; height: 12px; background: #1b365d; border-radius: 50%; }
+.time-btn { flex: 1; padding: 15px; border: 1px solid #000; border-radius: 20px; background: white; font-size: 1.1rem; }
+.time-btn.selected { background: #b7c9d9; }
+.agenda-footer { padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; }
+.address-area { background: white; padding: 10px 20px; border-radius: 10px; display: flex; align-items: center; gap: 15px; width: 65%; border: 1px solid #000; }
+.btn-confirm-agenda { background: #1b365d; color: white; border: none; padding: 15px 40px; border-radius: 10px; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
+
+/* --- NUEVOS ESTILOS: CONFIRMACIÓN --- */
+.confirmation-layout { padding: 0 50px; display: flex; flex-direction: column; gap: 20px; }
+.dashed-line { border-top: 2px dashed #000; width: calc(100% - 100px); margin: 0 auto 20px auto; }
+.btn-receipt { background: #1b365d; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; width: auto; margin-top: 10px; text-transform: none; font-weight: normal;}
+
+.confirm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+.confirm-card { background: white; padding: 25px; border-radius: 35px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.confirm-card h3 { color: #000; font-size: 1.8rem; margin: 0 0 15px 0; }
+.confirm-card p { font-size: 1.2rem; color: #333; margin: 8px 0; }
+.label-bold { font-weight: bold; color: #000; }
+
+.thanks-box { background: #1b365d; color: white; padding: 25px; border-radius: 15px; text-align: center; margin-top: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+.thanks-box h2 { font-size: 2.2rem; font-weight: 900; margin: 0 0 10px 0; text-transform: uppercase; }
+.thanks-box p { font-size: 1.2rem; margin: 5px 0; line-height: 1.4; }
+.thanks-box strong { text-transform: none; font-weight: normal;}
+
+.warning-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: #fff; color: #1b365d; font-weight: bold; font-size: 1.3rem; margin-right: 10px; vertical-align: middle; }

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - Gest LandCover</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="frame-body">
+    <div class="main-window">
+        <header class="white-header">
+            <div class="logo-area">
+                <img src="imagenproye.png" alt="Logo" class="logo-img-header">
+                <h1>SERVICIOS TOPOGRÁFICOS Y SIG</h1>
+            </div>
+        </header>
+        <main class="content">
+            <h2 class="title-bold">REGÍSTRATE</h2>
+            <p class="subtitle">Accede a tu panel para gestionar citas, ver informes y planos topográficos</p>
+            <div class="white-card register-grid">
+                <div class="input-group">
+                    <label>NOMBRE COMPLETO</label>
+                    <input type="text" id="reg-nombre" oninput="this.value = this.value.toLowerCase().replace(/(^\w|\s\w)/g, m => m.toUpperCase())">
+                    <span class="error-msg" id="err-nombre">Campo requerido</span>
+                </div>
+
+                <div class="input-group">
+                    <label>CORREO ELECTRÓNICO</label>
+                    <input type="email" id="reg-email">
+                    <span class="error-msg" id="err-email">Campo requerido</span>
+                </div>
+
+                <div class="input-group">
+                    <label>TELÉFONO</label>
+                    <input type="text" id="reg-tel" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    <span class="error-msg" id="err-tel">Campo requerido</span>
+                </div>
+
+                <div class="input-group">
+                    <label>CONTRASEÑA</label>
+                    <input type="password" id="reg-pass">
+                    <span class="error-msg" id="err-pass">Campo requerido</span>
+                </div>
+
+                <div class="input-group full-row">
+                    <label>CONFIRMAR CONTRASEÑA</label>
+                    <input type="password" id="reg-conf">
+                    <span class="error-msg" id="err-conf">Campo requerido</span>
+                </div>
+
+                <div class="full-row" style="text-align: center; margin-top: 10px;">
+                    <button class="btn-navy" onclick="validarRegistro()">REGISTRARSE</button>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <button class="link-btn" onclick="window.location.href='index.html'">¿Ya tienes cuenta? Iniciar sesión</button>
+            </div>
+        </main>
+    </div>
+    <script>
+    function validarRegistro() {
+        document.querySelectorAll('.error-msg').forEach(m => m.style.display = 'none');
+        let v = true;
+        const ids = ['reg-nombre', 'reg-email', 'reg-tel', 'reg-pass', 'reg-conf'];
+        
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if(!el.value.trim()){
+                document.getElementById('err-' + id.split('-')[1]).style.display='block';
+                v = false;
+            } else {
+                // Esto guarda los datos para que la pantalla de confirmación los use
+                localStorage.setItem(id, el.value.trim()); 
+            }
+        });
+        
+        if(v) window.location.href = 'servicios.html';
+    }
+    </script>
+</body>
+</html>
