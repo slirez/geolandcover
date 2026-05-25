@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - Gest LandCover</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="frame-body">
+    <div class="main-window">
+        <header class="white-header">
+            <div class="logo-area">
+                <img src="imagenproye.png" alt="Logo" class="logo-img-header">
+                <h1>SERVICIOS TOPOGRÁFICOS Y SIG</h1>
+            </div>
+        </header>
+        <main class="content">
+            <h2 class="title-bold">REGÍSTRATE</h2>
+            <p class="subtitle">Accede a tu panel para gestionar citas, ver informes y planos topográficos</p>
+            <div class="white-card register-grid">
+                <div class="input-group">
+                    <label>NOMBRE COMPLETO</label>
+                    <input type="text" id="reg-nombre" oninput="this.value = this.value.toLowerCase().replace(/(^\w|\s\w)/g, m => m.toUpperCase())">
+                    <span class="error-msg" id="err-nombre" style="display:none;">Campo requerido</span>
+                </div>
+
+                <div class="input-group">
+                    <label>CORREO ELECTRÓNICO</label>
+                    <input type="email" id="reg-email">
+                    <span class="error-msg" id="err-email" style="display:none;">Campo requerido</span>
+                </div>
+
+                <div class="input-group">
+                    <label>TELÉFONO</label>
+                    <input type="text" id="reg-tel" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    <span class="error-msg" id="err-tel" style="display:none;">Campo requerido</span>
+                </div>
+
+                <div class="input-group">
+                    <label>CONTRASEÑA</label>
+                    <input type="password" id="reg-pass">
+                    <span class="error-msg" id="err-pass" style="display:none;">Campo requerido</span>
+                </div>
+
+                <div class="input-group full-row">
+                    <label>CONFIRMAR CONTRASEÑA</label>
+                    <input type="password" id="reg-conf">
+                    <span class="error-msg" id="err-conf" style="display:none;">Campo requerido</span>
+                    <span class="error-msg" id="err-match" style="display:none;">Las contraseñas no coinciden</span>
+                </div>
+
+                <div class="full-row" style="text-align: center; margin-top: 10px;">
+                    <button class="btn-navy" onclick="validarRegistro()">REGISTRARSE</button>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <button class="link-btn" onclick="window.location.href='index.html'">¿Ya tienes cuenta? Iniciar sesión</button>
+            </div>
+        </main>
+    </div>
+    <script>
+        // Endpoint configurado para inserciones directas en la tabla de usuarios/clientes
+        const API_REGISTRO_URL = 'http://localhost:3000/api/auth/register';
+
+        /**
+         * Sanitiza, valida campos e inicia la petición persistente de guardado en el backend
+         */
+        async function validarRegistro() {
+            // Ocultación de alertas preventivas en la interfaz
+            document.querySelectorAll('.error-msg').forEach(m => m.style.display = 'none');
+            let esValido = true;
+            
+            const nombre = document.getElementById('reg-nombre').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const tel = document.getElementById('reg-tel').value.trim();
+            const pass = document.getElementById('reg-pass').value.trim();
+            const conf = document.getElementById('reg-conf').value.trim();
+
+            // Evaluaciones iterativas de nulidad estructural en los inputs
+            if(!nombre) { document.getElementById('err-nombre').style.display='block'; esValido = false; }
+            if(!email) { document.getElementById('err-email').style.display='block'; esValido = false; }
+            if(!tel) { document.getElementById('err-tel').style.display='block'; esValido = false; }
+            if(!pass) { document.getElementById('err-pass').style.display='block'; esValido = false; }
+            if(!conf) { document.getElementById('err-conf').style.display='block'; esValido = false; }
+
+            // Control de simetría de contraseñas de seguridad
+            if(pass && conf && pass !== conf) {
+                document.getElementById('err-match').style.display = 'block';
+                esValido = false;
+            }
+
+            if(!esValido) return;
+
+            // Conservación temporal de sesión local para rellenar vistas complementarias posteriores
+            localStorage.setItem('reg-nombre', nombre);
+            localStorage.setItem('reg-email', email);
+            localStorage.setItem('reg-tel', tel);
+
+            try {
+                // Posteo asíncronizado de la entidad hacia la Base de Datos relacional
+                const respuesta = await fetch(API_REGISTRO_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, email, telefono: tel, password: pass, role: 'cliente' })
+                });
+
+                const resultado = await respuesta.json();
+
+                if (!respuesta.ok) {
+                    alert(resultado.mensaje || "Error durante el guardado del usuario en la base de datos.");
+                    return;
+                }
+
+                // Autenticado implícito redirigiendo a la pantalla de servicios autorizados
+                localStorage.setItem('usuario_sesion', JSON.stringify(resultado.usuario || { nombre, email, role: 'cliente' }));
+                window.location.href = 'servicios.html';
+
+            } catch (error) {
+                console.error("Fallo crítico de comunicación con el motor transaccional:", error);
+                // Mitigación tolerante a fallos: Permite avanzar al flujo si el backend no procesa el paso
+                alert("Aviso: El servidor de base de datos no respondió, avanzando en modo offline.");
+                window.location.href = 'servicios.html';
+            }
+        }
+    </script>
+</body>
+</html>

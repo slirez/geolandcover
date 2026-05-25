@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Administración - Gest LandCover</title>
+ <style>
+   
+       /* 1. ESTILOS GENERALES Y CONTENEDOR PRINCIPAL */
+    
+    body { 
+        background-color: #333; /* Color gris oscuro exterior de fondo */
+        margin: 0; 
+        padding: 20px; 
+        font-family: 'Arial Narrow', sans-serif; 
+    }
+
+    /* Caja contenedora principal estilo maqueta de escritorio */
+    .main-window { 
+        max-width: 1000px; 
+        margin: 0 auto; /* Centrado horizontal automático */
+        background-color: #b7c9d9; /* Tono azul claro corporativo */
+        border-radius: 15px; 
+        overflow: visible; /* Permite que el logo redondo sobresalga sin recortarse */
+        border: 2px solid #000; 
+        min-height: 80px; 
+    }
+
+    /* 2. ENCABEZADO, LOGO Y TEXTOS PRINCIPALES*/
+    /* Franja blanca del header superior */
+    .white-header-strip { 
+        background-color: white; 
+        padding: 10px 30px; 
+        border-bottom: 2px solid #ccc; 
+        display: flex; 
+        justify-content: flex-start; 
+        align-items: center; 
+        height: 60px; 
+    }
+
+    /* Logo circular de la empresa que se superpone al diseño */
+    .logo-img-header-circular { 
+        width: 160px; 
+        height: 160px; 
+        border-radius: 50%; /* Transforma el contenedor en un círculo perfecto */
+        border: 5px solid #1b365d; /* Borde azul marino característico */
+        object-fit: cover; /* Mantiene la escala de la imagen sin deformaciones */
+        background: white; 
+        z-index: 100; /* Prioridad de capa alta */
+        position: relative; 
+        top: 50px; /* Desplazamiento posicional hacia abajo */
+        margin-right: 20px; 
+    }
+
+    /* Distribución de márgenes internos del panel administrativo */
+    .admin-layout { 
+        padding: 30px 40px 20px 40px; 
+        text-align: left; 
+    }
+
+    /* Título principal de la sección ("Panel de Administración") */
+    .title-bold { 
+        font-size: 3rem; 
+        color: #000; 
+        margin: -20px 0 5px 180px; /* Margen izquierdo amplio para librar el logo */
+        z-index: 110; 
+        position: relative; 
+    }
+
+    /* Subtítulo informativo de control y seguimiento */
+    .subtitle { 
+        font-size: 1.2rem; 
+        margin-bottom: 35px; 
+        margin-top: 0; 
+        margin-left: 180px; /* Alineado en el mismo eje que el título */
+        position: relative; 
+        z-index: 110; 
+    }
+
+    /* 3. BARRA DE HERRAMIENTAS (BARRA DE BÚSQUEDA Y CONTADOR)*/
+    /* Contenedor flexible para alinear la búsqueda y el contador */
+    .admin-tools { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 20px; 
+        gap: 20px; 
+    }
+
+    /* Caja de la barra de búsqueda (contiene icono + input) */
+    .search-box { 
+        background: white; 
+        border-radius: 20px; 
+        padding: 10px 20px; 
+        border: 1px solid #1b365d; 
+        display: flex; 
+        align-items: center; 
+        flex: 1; /* Permite que la barra se expanda ocupando el espacio disponible */
+    }
+
+    /* Campo de entrada de texto nativo para la búsqueda */
+    .search-box input { 
+        border: none; 
+        background: transparent; 
+        font-size: 1.1rem; 
+        width: 100%; 
+        outline: none; /* Elimina el borde de enfoque por defecto del navegador */
+        font-family: 'Arial Narrow', sans-serif; 
+    }
+
+    /* Indicador visual de cantidad ("Total Citas: X") */
+    .counter-badge { 
+        background: #1b365d; 
+        color: white; 
+        padding: 10px 25px; 
+        border-radius: 20px; 
+        font-weight: bold; 
+        font-size: 1.1rem; 
+    }
+
+    /* 4. TABLA DE DATOS (MATRIZ ADMINISTRATIVA)*/
+    /* Tarjeta blanca de fondo que contiene y aísla la tabla */
+    .matrix-card { 
+        background: white; 
+        padding: 25px; 
+        border-radius: 40px; 
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Sombra suave de elevación */
+        margin-bottom: 25px; 
+    }
+
+    /* Estructura general de la tabla nativa */
+    .admin-table { 
+        width: 100%; 
+        border-collapse: collapse; /* Une los bordes de las celdas contiguas */
+        text-align: left; 
+        font-size: 1.1rem; 
+    }
+
+    /* Celdas de encabezado de la tabla (Th) */
+    .admin-table th { 
+        border-bottom: 3px solid #b7c9d9; /* Línea inferior divisoria gruesa */
+        padding: 12px 10px; 
+        color: #1b365d; 
+        font-size: 1.2rem; 
+    }
+
+    /* Celdas de cuerpo de la tabla (Td) */
+    .admin-table td { 
+        padding: 15px 10px; 
+        border-bottom: 1px solid #eee; /* Separación sutil entre filas */
+        color: #333; 
+    }
+
+    /* Quita la línea de separación a la última fila de la tabla */
+    .admin-table tr:last-child td { 
+        border-bottom: none; 
+    }
+
+    /* Resaltador de etiquetas primarias de texto */
+    .label-bold { 
+        font-weight: bold; 
+        color: #000; 
+    }
+
+    /* Etiqueta / Píldora de estado visual ("Confirmada") */
+    .status-pill { 
+        background-color: #d4edda; /* Fondo verde claro suave */
+        color: #155724; /* Texto verde oscuro tipográfico */
+        padding: 5px 15px; 
+        border-radius: 15px; 
+        font-weight: bold; 
+        font-size: 0.9rem; 
+        display: inline-block; 
+    }
+
+    /*5. BOTONES DE ACCIÓN Y MENSAJES DE ALERTA */
+    /* Botón centrado inferior para el Cierre de Sesión */
+    .btn-action-logout { 
+        background: #1b365d; 
+        color: white; 
+        border: none; 
+        padding: 12px 40px; 
+        border-radius: 20px; 
+        font-weight: bold; 
+        font-size: 1.1rem; 
+        cursor: pointer; 
+        display: block; 
+        margin: 0 auto; /* Centrado de bloque perfecto */
+        font-family: 'Arial Narrow', sans-serif; 
+    }
+    
+    /* Mensaje alternativo cuando el backend no retorna registros */
+    .no-data-msg { 
+        text-align: center; 
+        padding: 40px; 
+        color: #666; 
+        font-size: 1.2rem; 
+        font-style: italic; 
+    }
+</style>
+</head>
+<body>
+    <div class="main-window">
+        <header class="white-header-strip">
+            <div class="logo-area">
+                <img src="imagenproye.png" alt="Logo" class="logo-img-header-circular">
+            </div>
+        </header>
+
+        <main class="content admin-layout">
+            <h2 class="title-bold">Panel De Administración</h2>
+            <p class="subtitle">Control y seguimiento de citas topográficas agendadas en GeoLandcover.</p>
+            
+            <div class="admin-tools">
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="#1b365d" style="margin-right: 10px;"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    <input type="text" id="adminSearch" onkeyup="filtrarCitas()" placeholder="Buscar citas por nombre de cliente...">
+                </div>
+                <div class="counter-badge">
+                    Total Citas: <span id="totalCitasCount">0</span>
+                </div>
+            </div>
+
+            <div class="matrix-card">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Contacto</th>
+                            <th>Servicio</th>
+                            <th>Fecha y Horario</th>
+                            <th>Dirección Proyecto</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody"></tbody>
+                </table>
+                <div id="noData" class="no-data-msg" style="display: none;">
+                    No se encontraron citas registradas en la base de datos.
+                </div>
+            </div>
+
+            <div style="padding: 20px 0;">
+                <button onclick="cerrarSesionAdmin()" class="btn-action-logout">CERRAR SESIÓN</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Endpoint configurado para leer todas las citas del módulo de administración
+        const API_URL = 'http://localhost:3000/api/citas';
+
+        window.onload = function() {
+            cargarCitasDesdeBD();
+        };
+
+        /**
+         * Petición dinámica real conectada a la Base de Datos para renderizar las tuplas de citas encontradas
+         */
+        async function cargarCitasDesdeBD() {
+            const tbody = document.getElementById('adminTableBody');
+            const noData = document.getElementById('noData');
+            tbody.innerHTML = "";
+
+            try {
+                // Ejecución del fetch sobre el endpoint de extracción de colecciones relacionales
+                const respuesta = await fetch(API_URL);
+                if (!respuesta.ok) throw new Error('Error al conectar con la base de datos');
+                
+                const listaCitasBD = await respuesta.json();
+                document.getElementById('totalCitasCount').innerText = listaCitasBD.length;
+
+                if (listaCitasBD.length === 0) {
+                    noData.style.display = "block";
+                    return;
+                } else {
+                    noData.style.display = "none";
+                }
+
+                // Ciclo iterativo para mapear las columnas provenientes de tus tablas relacionales
+                listaCitasBD.forEach((cita) => {
+                    const fila = document.createElement('tr');
+                    fila.className = "cita-row";
+                    
+                    // Manejo tolerante de alias posicionales según las propiedades devueltas por tu query
+                    fila.innerHTML = `
+                        <td><span class="label-bold">${cita.nombre_cliente || cita.nombre || 'Desconocido'}</span></td>
+                        <td>
+                            <div>${cita.telefono_cliente || cita.telefono || 'Sin Teléfono'}</div>
+                            <div style="font-size:0.85rem; color:#555;">${cita.email_cliente || cita.email || ''}</div>
+                        </td>
+                        <td><span style="color:#1b365d; font-weight:bold;">${cita.servicio_solicitado || cita.servicio || 'General'}</span></td>
+                        <td>
+                            <div class="label-bold">${cita.fecha_cita || cita.fecha}</div>
+                            <div style="font-size:0.95rem; color:#444;">${cita.horario_cita || cita.hora}</div>
+                        </td>
+                        <td style="max-width:200px; word-wrap:break-word;">${cita.direccion_proyecto || cita.direccion || 'No especificada'}</td>
+                        <td><span class="status-pill">${cita.estado || 'Confirmada'}</span></td>
+                    `;
+                    tbody.appendChild(fila);
+                });
+
+            } catch (error) {
+                console.error("Error en el enlace del servidor backend:", error);
+                noData.innerText = "Error de conexión con el servidor de Base de Datos principal.";
+                noData.style.display = "block";
+            }
+        }
+
+        /**
+         * Realiza una búsqueda posicional interactiva analizando las celdas del DOM en tiempo real
+         */
+        function filtrarCitas() {
+            const input = document.getElementById('adminSearch');
+            const filter = input.value.toUpperCase();
+            const rows = document.getElementsByClassName('cita-row');
+            let visibles = 0;
+
+            for (let i = 0; i < rows.length; i++) {
+                const nombreTd = rows[i].getElementsByTagName('td')[0];
+                if (nombreTd) {
+                    const txtValue = nombreTd.textContent || nombreTd.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        rows[i].style.display = "";
+                        visibles++;
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+
+            document.getElementById('noData').style.display = (visibles === 0 && rows.length > 0) ? "block" : "none";
+        }
+
+        /**
+         * Limpia el token administrativo y redirige de regreso al index principal
+         */
+        function cerrarSesionAdmin() {
+            localStorage.removeItem('usuario_sesion');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Gest LandCover</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos para los botones de selección de Rol manteniendo tu línea gráfica */
+        .role-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .role-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #1b365d;
+            background: white;
+            color: #1b365d;
+            font-weight: bold;
+            font-family: 'Arial Narrow', sans-serif;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .role-btn.active {
+            background: #1b365d;
+            color: white;
+        }
+    </style>
+</head>
+<body class="frame-body">
+    <div class="main-window">
+        <header class="white-header">
+            <div class="logo-area">
+                <img src="imagenproye.png" alt="Logo" class="logo-img-header">
+                <h1>SERVICIOS TOPOGRÁFICOS Y SIG</h1>
+            </div>
+        </header>
+        <main class="content">
+            <h2 class="title-bold">INICIAR SESIÓN</h2>
+            <p class="subtitle">Accede a tu panel para gestionar citas, ver informes y planos topográficos</p>
+            
+            <form id="form-login" class="white-card login-layout" onsubmit="manejarLogin(event)">
+                <div class="side-image" style="flex: 1;">
+                    <img src="imagen.JPG" alt="Topografía" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+                </div>
+                <div class="form-fields" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                    
+                    <div class="role-selector">
+                        <button type="button" id="btn-rol-cliente" class="role-btn active" onclick="cambiarRol('cliente')">CLIENTE</button>
+                        <button type="button" id="btn-rol-admin" class="role-btn" onclick="cambiarRol('admin')">ADMINISTRADOR</button>
+                    </div>
+
+                    <label for="login-email">CORREO ELECTRÓNICO</label>
+                    <input type="email" id="login-email" required>
+                    <span id="err-login-e" class="error-msg" style="display: none;">Campo requerido</span>
+                    
+                    <label style="margin-top: 20px;" for="login-pass">CONTRASEÑA</label>
+                    <input type="password" id="login-pass" required>
+                    <span id="err-login-p" class="error-msg" style="display: none;">Campo requerido</span>
+                    
+                    <button type="submit" class="btn-navy" style="margin-top: 30px;">ENTRAR</button>
+                </div>
+            </form>
+            
+            <div class="bottom-nav">
+                <button class="link-btn" onclick="window.location.href='registro.html'">¿No tienes cuenta? Regístrate</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Declaración del estado de rol inicial (por defecto el cliente consume el servicio)
+        let rolActual = 'cliente';
+
+        // Punto de acceso API para la autenticación centralizada en la base de datos
+        const API_LOGIN_URL = 'http://localhost:3000/api/auth/login';
+
+        // Credenciales estáticas de contingencia para pruebas funcionales offline
+        const ADMIN_CORREO_LOCAL = "admin@geolandcover.com";
+        const ADMIN_PASS_LOCAL = "admin1234";
+
+        /**
+         * Altera el estado del rol de usuario y actualiza la UI de los botones selectores
+         * @param {string} rol - El rol seleccionado ('cliente' o 'admin')
+         */
+        function cambiarRol(rol) {
+            rolActual = rol;
+            const btnCliente = document.getElementById('btn-rol-cliente');
+            const btnAdmin = document.getElementById('btn-rol-admin');
+            
+            if (rol === 'admin') {
+                btnAdmin.classList.add('active');
+                btnCliente.classList.remove('active');
+            } else {
+                btnCliente.classList.add('active');
+                btnAdmin.classList.remove('active');
+            }
+        }
+
+        /**
+         * Intercepta el evento de submit para procesar la autenticación contra el servidor/BD
+         * @param {Event} event - Evento nativo de formulario
+         */
+        async function manejarLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-pass').value.trim();
+
+            // Mecanismo de elusión local si se detectan credenciales de prueba preconfiguradas
+            if (rolActual === 'admin' && email === ADMIN_CORREO_LOCAL && pass === ADMIN_PASS_LOCAL) {
+                alert("¡Acceso de Administrador Autorizado (Modo de Prueba Local)!");
+                localStorage.setItem('usuario_sesion', JSON.stringify({ email: email, role: 'admin', nombre: 'Administrador Local' }));
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            try {
+                // Ejecución del disparo HTTP hacia los esquemas de validación de usuarios de la API
+                const respuesta = await fetch(API_LOGIN_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, password: pass, role: rolActual })
+                });
+
+                const resultado = await respuesta.json();
+
+                if (!respuesta.ok) {
+                    alert(resultado.mensaje || "Credenciales incorrectas para el rol seleccionado.");
+                    return;
+                }
+
+                // Almacenamiento seguro del payload del usuario en LocalStorage como sesión persistente de cliente
+                localStorage.setItem('usuario_sesion', JSON.stringify(resultado.usuario));
+                
+                // Redirección condicionada basada en la autorización jerárquica del backend
+                if (rolActual === 'admin') {
+                    alert("¡Acceso de Administrador Autorizado!");
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'servicios.html';
+                }
+
+            } catch (error) {
+                console.error("Error de infraestructura de comunicación con el Backend:", error);
+                alert("Error crítico al conectar con el servidor de bases de datos. Verifique disponibilidad.");
+            }
+        }
+    </script>
+</body>
+</html>

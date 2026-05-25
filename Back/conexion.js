@@ -3,19 +3,23 @@ const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
 // Configuración para Aiven PostgreSQL
+const sslEnabled = process.env.DB_SSL?.toLowerCase() !== 'false';
+
 const sequelize = new Sequelize(
-  process.env.DB_NAME, // Nombre de la DB en Aiven
-  process.env.DB_USER, // Usuario de Aiven
-  process.env.DB_PASSWORD, // Contraseña de Aiven
+  process.env.DB_NAME?.trim(), // Nombre de la DB
+  process.env.DB_USER?.trim(), // Usuario
+  process.env.DB_PASSWORD?.trim(), // Contraseña
   {
-    host: process.env.DB_HOST, // Host de Aiven
-    port: process.env.DB_PORT, // Puerto de Aiven (ver en el dashboard)
+    host: process.env.DB_HOST?.trim(),
+    port: process.env.DB_PORT ? Number(process.env.DB_PORT.trim()) : undefined,
     dialect: 'postgres',
     dialectOptions: {
-      ssl: {
-        require: true, // Aiven siempre requiere SSL
-        rejectUnauthorized: false, // Necesario para evitar errores de certificado
-      },
+      ssl: sslEnabled
+        ? {
+            require: true,
+            rejectUnauthorized: false,
+          }
+        : false,
     },
     logging: console.log, // opcional: para ver consultas SQL en consola
   }
