@@ -27,9 +27,7 @@ const UsuarioAdmin =sequelize.define('usuarios_admin', {
 
   rol: {
     type: DataTypes.ENUM(
-      'admin',
-      'recepcionista',
-      'supervisor'
+      'admin'
     ),
     defaultValue: 'admin'
   },

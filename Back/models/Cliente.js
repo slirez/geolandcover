@@ -17,6 +17,10 @@ const Cliente = sequelize.define('clientes', {
     type: DataTypes.STRING(20),
     allowNull: false
   },
+  password_hash:{
+  type: DataTypes.STRING(255),
+  allowNull: false
+  },
 
   correo: {
     type: DataTypes.STRING(150),
