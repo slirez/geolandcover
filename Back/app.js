@@ -197,7 +197,6 @@ app.post('/agregar_cliente', async (req, res) => {
 // ===============================
 
 app.get('/clientes', async (req, res) => {
-
   try {
 
     const clientes = await Cliente.findAll();
